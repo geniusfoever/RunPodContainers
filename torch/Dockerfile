@@ -38,38 +38,10 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip \
- && pip install --no-cache-dir \
-        --extra-index-url https://download.pytorch.org/whl/cu113 \
-        torch==1.12.1 \
-        torchvision==0.13.1 \
-        albumentations==0.4.3 \
-        opencv-python==4.5.5.64 \
-        pudb==2019.2 \
-        imageio==2.9.0 \
-        imageio-ffmpeg==0.4.2 \
-        pytorch-lightning==1.4.2 \
-        omegaconf==2.1.1 \
-        test-tube>=0.7.5 \
-        streamlit>=0.73.1 \
-        einops==0.3.0 \
-        torch-fidelity==0.3.0 \
-        transformers==4.22.2 \
-        kornia==0.6 \
-        webdataset==0.2.5 \
-        torchmetrics==0.6.0 \
-        fire==0.4.0 \
-        gradio==3.1.4 \
-        diffusers==0.3.0 \
-        datasets[vision]==2.4.0 \
-        -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers \
-        -e git+https://github.com/openai/CLIP.git@main#egg=clip \
-        -e git+https://github.com/justinpinkney/nomi.git@e9ded23b7e2269cc64d39683e1bf3c0319f552ab#egg=nomi \
-
-
 ENTRYPOINT ["python"]
 
-RUN pip install -U jupyterlab ipywidgets jupyter-archive
+RUN pip install -U jupyterlab ipywidgets jupyter-archive jupyter_contrib_nbextensions
+RUN jupyter contrib nbextension install --user
 RUN jupyter nbextension enable --py widgetsnbextension
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
@@ -86,4 +58,6 @@ RUN git clone https://github.com/geniusfoever/stable-diffusion-lambda.git
 
 WORKDIR /stable-diffusion-lambda
 
-RUN pip install --no-cache-dir -e .
+RUN pip install -r requirements.txt
+
+RUN pip install huggingface_hub
